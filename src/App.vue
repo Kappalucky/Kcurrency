@@ -28,4 +28,20 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+h1 {
+  text-align: center;
+}
+
+.jumbotron p {
+  font-size: 1.2em;
+}
+
+.jumbotron {
+  margin-top: 5em;
+  margin-bottom: 5em;
+}
+td img {
+  width: 25px;
+}
 </style>
