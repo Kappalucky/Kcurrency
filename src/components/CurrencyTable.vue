@@ -1,6 +1,6 @@
 <template>
-    <div class="currency-table">
-        <table class="table">
+    <div class="container">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Rank</th>
@@ -18,5 +18,51 @@
         </table>
     </div>
 </template>
+<script>
+import axios from "axios";
+let CRYPTOCOMPARE_API_URI = "https://www.cryptocompare.com";
+let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
+let UPDATE_INTERVAL = 60 * 1000;
+export default {
+  name: "CurrencyTable",
+  data: function() {
+    return {
+      coins: [],
+      coinData: {}
+    };
+  },
+  methods: {
+    // Loads currency data. Data used to find logos for each currency.
+    getCoinData: function() {
+      axios
+        .get(CRYPTOCOMPARE_API_URI + "/api/data/coinlist")
+        .then(response => {
+          this.coinData = response.data.Data;
+          this.getCoins();
+        })
+        .catch(err => {
+          this.getCoins();
+          console.error(err);
+        });
+    },
+    // Get top 10 cryptocurrencies by value.
+    getCoins: function() {
+      axios
+        .get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=10")
+        .then(response => {
+          this.coins = response.data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+    // Given cryptocurrency ticket symbol, return currency logo image.
+    getCoinImage: function(symbol) {
+      return CRYPTOCOMPARE_API_URI + this.coinData[symbol].ImageUrl;
+    }
+  }
+};
+</script>
+
 <style scoped>
 </style>
