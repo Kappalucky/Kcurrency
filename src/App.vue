@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
@@ -27,5 +23,21 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+h1 {
+  text-align: center;
+}
+
+.jumbotron p {
+  font-size: 1.2em;
+}
+
+.jumbotron {
+  margin-top: 5em;
+  margin-bottom: 5em;
+}
+td img {
+  width: 25px;
 }
 </style>
