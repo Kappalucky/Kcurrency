@@ -17,7 +17,9 @@
                 <tr v-for="coin in coins.data" :key="coin.rank">
                     <td>{{ coin.rank }}</td>
                     <td>
-                        <!--<img v-bind:src="getCoinImage(coin.symbol)"-->{{ coin.name }}</td>
+                        <!--<img v-bind:src="getCoinImage(coin.symbol)"-->
+                        {{ coin.name }}
+                    </td>
                     <td>{{ coin.symbol }}</td>
                     <td>{{ coin.quotes.USD.price | currency }}</td>
                     <td :style="getColor(coin.quotes.USD.percent_change_1h)">
@@ -38,8 +40,9 @@
 <script>
 import axios from "axios";
 
-let CRYPTOCOMPARE_API_URI = "https://min-api.cryptocompare.com";
-let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
+let CRYPTOCOMPARE_API_URL = "https://min-api.cryptocompare.com";
+let COINMARKETCAP_API_URL = "https://api.coinmarketcap.com";
+let IMAGE_URL = "https://www.cryptocompare.com";
 let UPDATE_INTERVAL = 60 * 1000;
 
 export default {
@@ -47,12 +50,15 @@ export default {
     data: function () {
         return {
             coins: [],
-            coinData: {}
+            coinData: {},
+            coinDetails: {},
         };
     },
     created() {
         this.getCoins();
         this.getCoinData();
+        // Updates data every minute
+        this.getCoinImage("BTC");
         setInterval(() => {
             this.getCoins();
         }, UPDATE_INTERVAL);
@@ -61,7 +67,7 @@ export default {
         // Loads currency data. Data used to find logos for each currency.
         getCoinData: function () {
             axios
-                .get(CRYPTOCOMPARE_API_URI + "/data/all/coinlist")
+                .get(CRYPTOCOMPARE_API_URL + "/data/all/coinlist")
                 .then(response => {
                     this.coinData = response.data.Data;
                 })
@@ -72,7 +78,7 @@ export default {
         // Get top 10 cryptocurrencies by value.
         getCoins: function () {
             axios
-                .get(COINMARKETCAP_API_URI + "/v2/ticker/?limit=10")
+                .get(COINMARKETCAP_API_URL + "/v2/ticker/?limit=10")
                 .then(response => {
                     console.log("request successful");
                     this.coins = response.data;
@@ -83,7 +89,12 @@ export default {
         },
         // Given cryptocurrency ticket symbol, return currency logo image.
         getCoinImage: function (symbol) {
-            return "https://www.cryptocompare.com" + this.coinData[symbol].ImageUrl;
+            //For some odd reason can not access data in object, need to find fix before implementing.
+            const image = this.coinData[symbol];
+            this.coinDetails = image;
+            //Object.entries(this.coinDetails);
+            //return this.coinDetails;
+            //return IMAGE_URL + this.coinData[symbol];
         },
         //return a css color depending on value passed, red - negative, green - positive
         getColor: function (percentage) {
